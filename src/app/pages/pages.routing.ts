@@ -10,6 +10,7 @@ import { Grafica1Component } from './grafica1/grafica1.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 const routes: Routes = [
     { 
@@ -25,6 +26,7 @@ const routes: Routes = [
             { path: 'account-settings', component: AccountSettingsComponent, data: { titulo: 'Ajuste de cta' } },
             { path: 'promesas', component: PromesasComponent, data: { titulo: 'Promesas' } },
             { path: 'rxjs', component: RxjsComponent, data: { titulo: 'RxJs' } },
+            { path: 'perfil', component: PerfilComponent, data: { titulo: 'Perfil de Usuario' } },
             /*no funciona rutas a partir de path especifico, se debe quitar comentario en app-routing.module
             y dejar vacio el path de la primera linea*/
             //{ path: '', redirectTo: '/dashboard', pathMatch: 'full'}

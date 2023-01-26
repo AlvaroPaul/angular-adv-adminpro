@@ -8,15 +8,19 @@ import { environment } from '../../environments/environment';
 
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
+import { Usuario } from '../models/usuario.model';
 
 declare const google: any;
 
 const base_url = environment.base_url;
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
+
+  public usuario!: Usuario;
 
   constructor( private http: HttpClient,
                private router: Router,
@@ -33,18 +37,28 @@ export class UsuarioService {
     });
   }
 
-  validarToken(): Observable<boolean> {
-    const token = localStorage.getItem('token') || '';
+  
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
 
+  get uid(): string {
+    return this.usuario.uid || '';
+  }
+
+  validarToken(): Observable<boolean> {
+    
     return this.http.get(`${ base_url }/login/renew`, {
       headers: {
-        'x-token': token
+        'x-token': this.token
       }
     }).pipe(
-      tap( (resp: any) => {
+      map( (resp: any) => {
+        const { email, google, img = '', nombre, role, uid } = resp.usuario;
+        this.usuario = new Usuario( nombre, email, '', img, google, role, uid );
         localStorage.setItem('token', resp.token);
+        return true;
       }),
-      map( resp => true),
       catchError( error => of(false) )
     );
   }
@@ -57,6 +71,21 @@ export class UsuarioService {
                   localStorage.setItem('token', resp.token)
                 })
               )
+
+  }
+
+  actualizarPerfil( data: { email: string, nombre: string, role: string | undefined } ) {
+    
+    data = {
+      ...data,
+      role: this.usuario.role
+    };
+
+    return this.http.put(`${ base_url }/usuarios/${this.uid}`, data, {
+      headers: {
+        'x-token': this.token
+      }
+    });
 
   }
 
