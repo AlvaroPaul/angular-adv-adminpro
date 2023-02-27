@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Usuario } from '../../../models/usuario.model';
 import { BusquedasService } from '../../../services/busquedas.service';
-import { ThisReceiver } from '@angular/compiler';
 import Swal from 'sweetalert2';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
 import { delay, Subscription } from 'rxjs';
@@ -73,14 +72,14 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   buscar( termino: string ) {
 
     if ( termino.length === 0 ) {
-      return this.usuarios = this.usuariosTemp;
+      return this.cargarUsuarios();
     }
-
-    this.busquedasService.buscar( 'usuarios', termino )
-      .subscribe( resultados => {
-        this.usuarios = resultados;
+    
+      this.busquedasService.buscar( 'usuarios', termino )
+      .subscribe( resp => {
+        this.usuarios = resp as Usuario[];
       });
-      return true;
+
   }
 
   eliminarUsuario( usuario: Usuario ) {
